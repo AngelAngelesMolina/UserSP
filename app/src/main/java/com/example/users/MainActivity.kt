@@ -1,15 +1,16 @@
 package com.example.users
 
+import android.content.Context
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.users.databinding.ActivityMainBinding
-import com.example.userssp.User
-import com.example.userssp.UserAdapter
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.textfield.TextInputEditText
 
 class MainActivity : AppCompatActivity(), OnClickListener {
     private lateinit var  userAdapter: UserAdapter
@@ -20,6 +21,54 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        val preferences = getPreferences(Context.MODE_PRIVATE)
+        val isFirstTime = preferences.getBoolean(getString(R.string.sp_first_time), true)
+        Log.i("SP", "${getString(R.string.sp_first_time)} = $isFirstTime")
+
+
+        if(isFirstTime){
+            val dialogView = layoutInflater.inflate(R.layout.dialog_register, null)
+          /*MaterialAlertDialogBuilder(this)
+              .setTitle(R.string.dialog_title)
+              .setView(dialogView)
+              .setPositiveButton(R.string.dialog_confirm)  { _, _->
+                  val username = dialogView.findViewById<TextInputEditText>(R.id.etUsername).text.toString()
+                  with(preferences.edit()) {
+                      putBoolean(getString(R.string.sp_first_time), false)
+                      putString(getString(R.string.sp_username), username)
+                          .apply()
+                  }
+                  Toast.makeText(this, R.string.register_success, Toast.LENGTH_SHORT ).show()
+            }.setCancelable(false)
+              .show()*/
+            val dialog = MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.dialog_title)
+                .setView(dialogView)
+                .setPositiveButton(R.string.dialog_confirm)  { _, _->
+
+                }.setCancelable(false)
+                .create()
+            dialog.show()
+
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+                val username = dialogView.findViewById<TextInputEditText>(R.id.etUsername).text.toString()
+                if(username.isBlank()){
+                    Toast.makeText(this, R.string.register_invalid, Toast.LENGTH_SHORT).show()
+                }else{
+                    with(preferences.edit()) {
+                        putBoolean(getString(R.string.sp_first_time), false)
+                        putString(getString(R.string.sp_username), username)
+                            .apply()
+                    }
+                    Toast.makeText(this, R.string.register_success, Toast.LENGTH_SHORT ).show()
+                    dialog.dismiss()
+                }
+            }
+
+        } else{
+            val username = preferences.getString(getString(R.string.sp_username), getString(R.string.hint_username))
+            Toast.makeText(this, "Bienvenido $username", Toast.LENGTH_SHORT ).show()
+        }
         userAdapter = UserAdapter(getUsers(),this)
         linearLayoutManager = LinearLayoutManager(this)
         mBinding.rv.apply {

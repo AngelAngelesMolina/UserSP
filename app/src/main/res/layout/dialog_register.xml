@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:padding="@dimen/common_padding_default"
+    android:layout_height="wrap_content">
+<com.google.android.material.textfield.TextInputLayout
+    android:layout_width="match_parent"
+    style="@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox.Dense"
+    app:counterEnabled="true"
+    app:helperText="@string/helper_username"
+    android:hint="@string/hint_username"
+    app:counterMaxLength="@integer/max_length_username"
+    android:layout_height="wrap_content">
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:id="@+id/etUsername"
+        android:maxLength="@integer/max_length_username"
+        android:inputType="textPersonName"
+        android:layout_height="wrap_content"/>
+
+</com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>
