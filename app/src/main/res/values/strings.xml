@@ -5,6 +5,7 @@
     <string name="sp_username">username</string>
     <string name="dialog_title">Registro de usuario</string>
     <string name="dialog_confirm">Registrar</string>
+    <string name="dialog_guess">Invitado</string>
     <string name="helper_username">Obligatorio</string>
     <string name="hint_username">Nombre de usuario</string>
     <string name="register_success">Usuario registrado correctamente</string>

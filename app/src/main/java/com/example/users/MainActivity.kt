@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.users.databinding.ActivityMainBinding
@@ -44,12 +45,15 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             val dialog = MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.dialog_title)
                 .setView(dialogView)
-                .setPositiveButton(R.string.dialog_confirm)  { _, _->
+                .setNeutralButton(R.string.dialog_guess){_,_ -> }
+                .setPositiveButton(R.string.dialog_confirm)  { _, _-> }
+                    .setCancelable(false)
 
-                }.setCancelable(false)
                 .create()
             dialog.show()
-
+            dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener{
+                dialog.dismiss()
+            }
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                 val username = dialogView.findViewById<TextInputEditText>(R.id.etUsername).text.toString()
                 if(username.isBlank()){
@@ -76,6 +80,19 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             layoutManager = linearLayoutManager
             adapter = userAdapter
         }
+
+        val swipeHelper = ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean = false //sort a list
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+             userAdapter.remove(viewHolder.adapterPosition)
+            }
+        })
+        swipeHelper.attachToRecyclerView(mBinding.rv)
 
     }
 
